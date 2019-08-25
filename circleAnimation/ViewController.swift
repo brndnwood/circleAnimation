@@ -10,92 +10,53 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    let shapeLayerCircle = CAShapeLayer()
-    let shaperLayerCircleTrack = CAShapeLayer()
+    @IBOutlet weak var topView: UIView!
+    @IBOutlet weak var middleView: UIView!
+    @IBOutlet weak var bottomView: UIView!
+    
     let shapeLayerLine = CAShapeLayer()
     
-    var fillColor: CGColor = UIColor.clear.cgColor
-    var timer : Timer?
 
-    var percent : UILabel?
+    
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
-        drawCircle()
         drawLine()
+        
+        let circle1 = CircleVC(animate: true,
+                               height: topView.frame.height,
+                               width: topView.frame.width,
+                               trackOutline: false,
+                               circleColor: UIColor.red.cgColor,
+                               startPercent: 0.1)
+        
+        
+        let circle2 = CircleVC(animate: false,
+                               height: middleView.frame.height,
+                               width: middleView.frame.width,
+                               trackOutline: false,
+                               circleColor: UIColor.green.cgColor,
+                               startPercent: 0.33)
+        
+        
+        let circle3 = CircleVC(animate: false,
+                               height: bottomView.frame.height,
+                               width: bottomView.frame.width,
+                               trackOutline: true,
+                               circleColor: UIColor.blue.cgColor,
+                               startPercent: 0.5)
 
+        
+        
+        topView.addSubview(circle1)
+        middleView.addSubview(circle2)
+        bottomView.addSubview(circle3)
     }
     
     
-    
-    fileprivate func drawCircle() {
-        
-        // create the circle path
-        let path = UIBezierPath(arcCenter: view.center, radius: 60, startAngle: -CGFloat.pi/2, endAngle: 2 * CGFloat.pi, clockwise: true)
-        let trackPath = UIBezierPath(arcCenter: view.center, radius: 60, startAngle: -CGFloat.pi/2, endAngle: 2 * CGFloat.pi, clockwise: true)
-
-
-        
-        // add path to the shapeLayer
-        shapeLayerCircle.path = path.cgPath
-        shaperLayerCircleTrack.path = trackPath.cgPath
-        
-        
-        // set attributes for circle
-        shapeLayerCircle.fillColor = fillColor
-        shapeLayerCircle.strokeColor = UIColor.red.cgColor
-        shapeLayerCircle.lineWidth = 10
-        shapeLayerCircle.lineCap = .round
-        shapeLayerCircle.strokeEnd = 0
-        
-        percent = UILabel(frame: CGRect(x: view.frame.width/2-45, y: view.frame.height/2-50, width: 100, height: 100))
-        percent!.text = "0%"
-        percent!.textAlignment = .center
-        percent!.font = .systemFont(ofSize: 30.0, weight: .bold)
-        
-        // set attributes for circle track
-        shaperLayerCircleTrack.fillColor = fillColor
-        shaperLayerCircleTrack.strokeColor = UIColor.lightGray.cgColor
-        shaperLayerCircleTrack.lineWidth = 10
-        shaperLayerCircleTrack.lineCap = .round
-//        shaperLayerCircleTrack.strokeEnd = 1
-        
-        view.layer.addSublayer(shaperLayerCircleTrack)
-        
-        view.layer.addSublayer(shapeLayerCircle)
-        view.addSubview(percent!)
-
-
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(updateCircle), userInfo: nil, repeats: true)
-        
-//        // tell it to animate the strokeEnd attribute
-//        let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
-//
-//        // animate strokeEnd all the way around to starting point for 2 seconds
-//        basicAnimation.toValue = 1
-//        basicAnimation.duration = 3
-//
-//        // keep the animation on screen when complete
-//        basicAnimation.isRemovedOnCompletion = false
-//        basicAnimation.fillMode = .forwards
-//
-//        // add the animation to the shape layer
-//        shapeLayerCircle.add(basicAnimation, forKey: "blah")
-    }
-    
-    
-    @objc func updateCircle() {
-        print(shapeLayerCircle.strokeEnd)
-        shapeLayerCircle.strokeEnd += 0.05
-        let percentage = ((100 * shapeLayerCircle.strokeEnd)/80) * 100
-        percent!.text = String(format: "%.0f", percentage) + "%"
-        
-        if (shapeLayerCircle.strokeEnd >= 0.8) {
-            timer!.invalidate()
-        }
-    }
     
 
     
